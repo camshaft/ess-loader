@@ -1,6 +1,10 @@
 
 exports.toCSS = function(selectors, props) {
-  return '\n' + selectors.join(',\n') + ' {\n' + formatProps(props) + '\n}\n';
+  if (typeof selectors === 'function') return selectors(props);
+  return '\n' +
+    (Array.isArray(selectors) ? selectors.join(',\n') : selectors) + '{\n' +
+      formatProps(props) + '\n' +
+    '}\n';
 }
 
 function formatProps(props) {
