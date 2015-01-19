@@ -2,7 +2,7 @@
  * Module dependencies
  */
 
-var utils = require('./to-css');
+var renderCSS = require('./to-css').renderCSS;
 
 module.exports = function(source) {
   this.cacheable && this.cacheable();
@@ -20,13 +20,11 @@ function loadDynamic(source) {
 
 function loadRaw(source) {
   return source + '\n' +
-    'import {toCSS, $get} from ' + JSON.stringify(require.resolve('./to-css')) + '\n' +
-    'export default function(props) {\n' +
-    '  return exports.render(toCSS, $get, props);\n' +
-    '}';
+    'import {renderCSS} from ' + JSON.stringify(require.resolve('./to-css')) + '\n' +
+    'export default renderCSS(exports);\n';
 }
 
 function loadStatic(source) {
   var mod = this.exec(source);
-  return mod.render(utils.toCSS, utils.$get);
+  return renderCSS(mod)();
 }
