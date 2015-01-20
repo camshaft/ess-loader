@@ -19,6 +19,9 @@
     "url": "https://github.com/camshaft/ess-loader/issues"
   },
   "homepage": "https://github.com/camshaft/ess-loader",
+  "dependencies": {
+    "enhanced-require": "^0.4.0"
+  },
   "peerDependencies": {
     "onus-style": "^0.1.4"
   }
