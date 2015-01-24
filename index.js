@@ -56,9 +56,15 @@ function compileStatic(source) {
       extensions: opts.resolve.extensions,
       modulesDirectories: opts.resolve.modulesDirectories
     }
-  }, toString) + '));\n'
+  }, toString) + '));\nexports.__require = require\n';
 
   var mod = this.exec(er + source, this.resource);
+
+  var _require = mod.__require;
+
+  for (var file in _require.contentCache) {
+    this.addDependency(file);
+  }
 
   var out = renderCSS(mod)();
 
