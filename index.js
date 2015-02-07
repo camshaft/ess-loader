@@ -39,7 +39,7 @@ function compileDynamic() {
 
 function compileRaw() {
   return '\n' +
-    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports);';
+    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports, process.env.NODE_ENV === "development" && ' + JSON.stringify(this.resource) + ');';
 }
 
 function compileStatic(source, q) {
@@ -66,7 +66,7 @@ function compileStatic(source, q) {
 
   // TODO support props with query string
 
-  var out = renderCSS(mod)();
+  var out = renderCSS(mod, this.resource)();
 
   return out;
 }
