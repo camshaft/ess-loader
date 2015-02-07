@@ -2,14 +2,14 @@
  * Module dependencies
  */
 
-var renderCSS = require('./to-css').renderCSS;
+var renderCSS = require('ess-compiler/render');
 
 exports = module.exports = function(source) {
   this.cacheable && this.cacheable();
   var q = this.resourceQuery || '';
   if (~q.indexOf('dynamic')) return source + compileDynamic();
   if (~q.indexOf('raw')) return source + compileRaw();
-  return compileStatic.call(this, source);
+  return compileStatic.call(this, source, q);
 };
 
 exports.pitch = function(remainingRequest) {
@@ -34,17 +34,15 @@ function pitchRaw(req) {
 
 function compileDynamic() {
   return '\n' +
-    'var toCSS = require(' + resolve('./to-css') + ')["toCSS"];\n' +
-    'exports["default"] = require("onus-style")(exports, toCSS);';
+    'exports["default"] = require("onus-style")(exports, require(' + resolve('ess-compiler/dom') + '));';
 }
 
 function compileRaw() {
   return '\n' +
-    'var renderCSS = require(' + resolve('./to-css') + ')["renderCSS"];\n' +
-    'exports["default"] = renderCSS(exports);';
+    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports);';
 }
 
-function compileStatic(source) {
+function compileStatic(source, q) {
   var opts = this.options;
 
   var loaders = opts.module ? opts.module.loaders : opts.resolve.loaders;
@@ -65,6 +63,8 @@ function compileStatic(source) {
   for (var file in _require.contentCache) {
     this.addDependency(file);
   }
+
+  // TODO support props with query string
 
   var out = renderCSS(mod)();
 

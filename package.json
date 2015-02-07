@@ -1,14 +1,14 @@
 {
   "name": "ess-loader",
-  "version": "0.1.4",
-  "description": "EcmascriptStyleSheets loader for webpack",
+  "version": "0.2.0",
+  "description": "ess loader for webpack",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/camshaft/ess-loader.git"
+    "url": "https://github.com/css-utils/ess-loader.git"
   },
   "keywords": [
     "react"
@@ -16,13 +16,14 @@
   "author": "Cameron Bytheway <bytheway.cameron@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/camshaft/ess-loader/issues"
+    "url": "https://github.com/css-utils/ess-loader/issues"
   },
-  "homepage": "https://github.com/camshaft/ess-loader",
+  "homepage": "https://github.com/css-utils/ess-loader",
   "dependencies": {
     "enhanced-require": "git+https://github.com/camshaft/enhanced-require.git"
   },
   "peerDependencies": {
-    "onus-style": "^0.1.4"
+    "onus-style": "^0.1.4",
+    "ess-compiler": "^0.1.0"
   }
 }
