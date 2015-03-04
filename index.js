@@ -61,7 +61,7 @@ function compileStatic(source, q) {
   var _require = mod.__require;
 
   for (var file in _require.contentCache) {
-    this.addDependency(file);
+    this.addDependency && this.addDependency(file);
   }
 
   // TODO support props with query string
