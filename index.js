@@ -49,6 +49,7 @@ function compileStatic(source, q) {
 
   var mopts = Object.keys(opts).reduce(function(acc, key) {
     acc[key] = opts[key];
+    return acc;
   }, {});
 
   mopts.recursive = true;
