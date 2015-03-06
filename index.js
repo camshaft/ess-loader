@@ -47,14 +47,19 @@ function compileStatic(source, q) {
 
   var loaders = opts.module ? opts.module.loaders : opts.resolve.loaders;
 
-  var er = 'require = require(' + resolve('enhanced-require') + ')(module, require(' + resolve('./json2regexp') + ')(' + JSON.stringify({
-    recursive: true,
-    resolve: {
-      loaders: loaders,
-      extensions: opts.resolve.extensions,
-      modulesDirectories: opts.resolve.modulesDirectories
-    }
-  }, toString) + '));\nexports.__require = require\n';
+  var mopts = Object.keys(opts).reduce(function(acc, key) {
+    acc[key] = opts[key];
+  }, {});
+
+  mopts.recursive = true;
+  mopts.resolve = {
+    loaders: loaders,
+    extensions: opts.resolve.extensions,
+    modulesDirectories: opts.resolve.modulesDirectories
+  };
+
+  var er = 'require = require(' + resolve('enhanced-require') + ')(module, require(' + resolve('./json2regexp') + ')(' +
+        JSON.stringify(mopts, toString) + '));\nexports.__require = require\n';
 
   var mod = this.exec(er + source, this.resource);
 
