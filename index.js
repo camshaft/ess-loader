@@ -56,7 +56,7 @@ function compileStatic(source, q) {
   mopts.resolve = {
     loaders: loaders,
     extensions: opts.resolve.extensions,
-    modulesDirectories: opts.resolve.modulesDirectories
+    modulesDirectories: (opts.resolve.modulesDirectories || []).concat(opts.resolve.fallback || [])
   };
 
   var er = 'require = require(' + resolve('enhanced-require') + ')(module, require(' + resolve('./json2regexp') + ')(' +
