@@ -24,6 +24,6 @@
   },
   "peerDependencies": {
     "onus-style": "^0.1.4",
-    "ess-compiler": "^0.1.0"
+    "ess-compiler": "*"
   }
 }
