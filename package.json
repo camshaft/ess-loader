@@ -23,7 +23,7 @@
     "enhanced-require": "git+https://github.com/camshaft/enhanced-require.git"
   },
   "peerDependencies": {
-    "onus-style": "^0.1.4",
+    "onus-style": ">=0.1.4",
     "ess-compiler": "*"
   }
 }
