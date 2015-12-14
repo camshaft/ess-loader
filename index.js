@@ -2,86 +2,34 @@
  * Module dependencies
  */
 
-var renderCSS = require('ess-compiler/render');
-
-exports = module.exports = function(source) {
-  this.cacheable && this.cacheable();
-  var q = this.resourceQuery || '';
-  if (~q.indexOf('dynamic')) return source + compileDynamic();
-  if (~q.indexOf('raw')) return source + compileRaw();
-  return compileStatic.call(this, source, q);
-};
-
+exports = module.exports = function(source) {};
 exports.pitch = function(remainingRequest) {
   this.cacheable && this.cacheable();
-  var req = remainingRequest.split('!');
+  var req = JSON.stringify('!!' + remainingRequest);
   var q = this.resourceQuery || '';
   if (~q.indexOf('dynamic')) return pitchDynamic.call(this, req);
   if (~q.indexOf('raw')) return pitchRaw.call(this, req);
+  return pitchStatic.call(this, req);
 };
 
 function pitchDynamic(req) {
   return '' +
-    'exports = module.exports = require(' + JSON.stringify('!!' + req.join('!')) + ');\n' +
-    compileDynamic();
+    'exports = module.exports = require(' + req + ');\n' +
+    'exports["default"] = require("onus-style")(exports, require(' + resolve('ess-compiler/dom') + '));';
 }
 
 function pitchRaw(req) {
   return '' +
-    'exports = module.exports = require(' + JSON.stringify('!!' + req.join('!')) + ');\n' +
-    compileRaw();
+    'exports = module.exports = require(' + req + ');\n' +
+    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports);';
 }
 
-function compileDynamic() {
-  return '\n' +
-    'exports["default"] = require("onus-style")(exports, require(' + resolve('ess-compiler/dom') + '));';
-}
-
-function compileRaw() {
-  return '\n' +
-    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports, process.env.NODE_ENV === "development" && ' + JSON.stringify(this.resource) + ');';
-}
-
-function compileStatic(source, q) {
-  var opts = this.options;
-
-  var loaders = opts.module ? opts.module.loaders : opts.resolve.loaders;
-
-  var mopts = Object.keys(opts).reduce(function(acc, key) {
-    acc[key] = opts[key];
-    return acc;
-  }, {});
-
-  mopts.recursive = true;
-  mopts.resolve = {
-    loaders: loaders,
-    extensions: opts.resolve.extensions,
-    modulesDirectories: (opts.resolve.modulesDirectories || []).concat(opts.resolve.fallback || [])
-  };
-
-  var er = 'require = require(' + resolve('enhanced-require') + ')(module, require(' + resolve('./json2regexp') + ')(' +
-        JSON.stringify(mopts, toString) + '));\nexports.__require = require\n';
-
-  var mod = this.exec(er + source, this.resource);
-
-  var _require = mod.__require;
-
-  for (var file in _require.contentCache) {
-    this.addDependency && this.addDependency(file);
-  }
-
-  // TODO support props with query string
-
-  var out = renderCSS(mod, this.resource)();
-
-  return out;
+function pitchStatic(req) {
+  return '' +
+    'var content = require(' + req + ');\n' +
+    'module.exports = [[module.id, require(' + resolve('ess-compiler/render') + ')(content)(), ""]];';
 }
 
 function resolve(path) {
   return JSON.stringify(require.resolve(path));
-}
-
-function toString(key, value) {
-  if (!(value instanceof RegExp)) return value;
-  return value.toString();
 }
