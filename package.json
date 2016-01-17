@@ -20,7 +20,12 @@
   },
   "homepage": "https://github.com/css-utils/ess-loader",
   "peerDependencies": {
+    "autoprefixer": "*",
+    "postcss": "*",
     "onus-style": ">=0.1.4",
     "ess-compiler": "*"
+  },
+  "dependencies": {
+    "loader-utils": "^0.2.12"
   }
 }
