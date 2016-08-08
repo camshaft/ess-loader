@@ -18,13 +18,15 @@ exports.pitch = function(remainingRequest) {
 function pitchDynamic(req) {
   return '' +
     'exports = module.exports = require(' + req + ');\n' +
-    'exports["default"] = require("onus-style")(exports, require(' + resolve('ess-compiler/dom') + '));';
+    'exports["default"] = require("onus-style")(exports, require(' + resolve('ess-compiler/dom') + '));\n' +
+    'exports.__esModule = true;';
 }
 
 function pitchRaw(req) {
   return '' +
     'exports = module.exports = require(' + req + ');\n' +
-    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports);';
+    'exports["default"] = require(' + resolve('ess-compiler/render') + ')(exports);\n' +
+    'exports.__esModule = true;';
 }
 
 function pitchStatic(req, opts) {
